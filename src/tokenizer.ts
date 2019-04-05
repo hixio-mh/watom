@@ -2,7 +2,7 @@ enum TokenType {
   Arrow,
   Column,
   Name,
-  Opcode,
+  Operator,
   Var
 }
 
@@ -15,7 +15,7 @@ interface Token {
 const varRegExp = /^([a-z]){1,1}$/;
 // vars must be lowercase letters of length at least 2
 const nameRegExp = /^([a-z]){2,}$/;
-const opCodes = ['+', '-', '/', '*'];
+const Operators = ['+', '-', '/', '*'];
 const ARROW = '=>';
 const COLUMN = ':';
 
@@ -28,10 +28,11 @@ function getTokenType(str: string): TokenType {
     return TokenType.Arrow;
   } else if (str === COLUMN) {
     return TokenType.Column;
-  } else if (opCodes.includes(str)) {
-    return TokenType.Opcode;
+  } else if (Operators.includes(str)) {
+    return TokenType.Operator;
+  } else {
+    throw SyntaxError(`Watom doesn't know what ${str} is.`);
   }
-  throw Error('Parsing error!');
 }
 
 function tokenize(input: string): Array<Token> {
