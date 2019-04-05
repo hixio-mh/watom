@@ -1,18 +1,39 @@
 const input = 'add : a b => a + b';
 
-enum TokenTypes {
-  Up,
-  Down,
-  Left,
-  Right
+enum TokenType {
+  Opcode,
+  Name,
+  Arrow,
+  Column,
+  Var
 }
 
-const getType = (item: string) => TokenTypes.Down;
+interface Token {
+  type: TokenType;
+  value: string;
+}
+
+function getTokenType(item: string): TokenType {
+  switch (item) {
+    case 'a':
+      return TokenType.Var;
+      break;
+    case 'b':
+      return TokenType.Var;
+      break;
+    default:
+      return TokenType.Column;
+      break;
+  }
+}
 
 const tokenize = (input: string) =>
-  input.split(' ').map(item => ({
-    type: getType(item),
-    value: item
-  }));
+  input.split(' ').map(item => {
+    const token: Token = {
+      type: getTokenType(item),
+      value: item
+    };
+    return token;
+  });
 
 console.log(tokenize(input));
