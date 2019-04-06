@@ -1,50 +1,153 @@
 import { ItemType } from './common/enums';
 import { TokenType } from './common/enums';
+import {
+  FUNC,
+  varRegExp,
+  nameRegExp,
+  ARROW,
+  COLUMN,
+  OPS
+} from './common/syntax';
+
+// var ast = {
+//   type: 'Program',
+//   body: [
+//     {
+//       type: 'FunctionDeclaration',
+//       name: 'add',
+//       params: [
+//         {
+//           type: 'Numberi32',
+//           value: 'a'
+//         },
+//         {
+//           type: 'Numberi32',
+//           value: 'b'
+//         }
+//       ],
+//       returnValue: {
+//         type: 'Expression',
+//         value: {
+//           type: 'Operation',
+//           name: '+',
+//           operands: [
+//             {
+//               type: 'Numberi32',
+//               value: 'a'
+//             },
+//             {
+//               type: 'Numberi32',
+//               value: 'b'
+//             }
+//           ]
+//         }
+//       }
+//     }
+//   ]
+// };
+
+function returnValueBuilder(tokens, startIndex) {
+  // we know that the return value spans until the end
+  const endIndex = tokens.length - 1;
+  return {
+    item: {
+      type: ItemType.Expression,
+      value: 'yup'
+    },
+    increment: endIndex - startIndex
+  };
+}
+
+function fnDeclarationBuilder(tokens, startIndex) {
+  // we know that a fn dec is like: `fn fnName :`
+  const endIndex = startIndex + 2;
+  return {
+    item: {
+      name: tokens[startIndex + 1].value,
+      type: ItemType.FnDeclaration
+    },
+    increment: endIndex - startIndex
+  };
+}
+
+function paramsBuilder(tokens, startIndex) {
+  let endIndex = startIndex;
+  // everything before "=>" is a parameter
+  while (tokens[endIndex].value !== '=>') {
+    endIndex++;
+  }
+  const params = tokens.slice(startIndex + 1, endIndex);
+  return {
+    item: params.map(p => ({
+      type: ItemType.Number,
+      value: p.value
+    })),
+    increment: endIndex - startIndex
+  };
+}
 
 function parse(tokens) {
   let current = 0;
   let count = tokens.length;
 
-  let ast = {
-    type: 'Program',
-    body: []
-  };
-
   function getAstItem(token, tokens) {
+    // console.log(token.type);
+    // console.log(current);
+    // console.log('----');
     switch (token.type) {
-      case TokenType.Var:
-        current++;
-        return {
-          type: ItemType.Number,
-          value: token.value
-        };
       case TokenType.FnKeyword:
-        const temp2 = current;
-        // +3 because we want to skip both "fn" and ":"
-        current += 3;
+        let tempX = current;
+        let tempX2 = tempX + fnDeclarationBuilder(tokens, tempX).increment;
+        let tempX3 = tempX2 + paramsBuilder(tokens, tempX2).increment;
+        let tempX4 = tempX3 + returnValueBuilder(tokens, tempX3).increment;
+        current += tempX4;
+        console.log(current);
         return {
-          type: ItemType.FnDeclaration,
-          name: tokens[temp2 + 1].value,
-          params: [
-            getAstItem(tokens[temp2 + 3], tokens),
-            getAstItem(tokens[temp2 + 4], tokens)
-          ]
+          ...fnDeclarationBuilder(tokens, tempX).item,
+          params: paramsBuilder(tokens, tempX2).item,
+          returnValue: returnValueBuilder(tokens, tempX3).item
         };
-      case TokenType.Operator:
-        const temp = current;
-        current++;
-        return {
-          type: ItemType.Operation,
-          name: token.value,
-          operands: [
-            getAstItem(tokens[temp + 1], tokens),
-            getAstItem(tokens[temp + 2], tokens)
-          ]
-        };
+      //   name: tokens[tempX + 1].value
+      //   params: [
+      //     getAstItem(tokens[current + 1], tokens),
+      //     getAstItem(tokens[current + 1], tokens)
+      //   ],
+      //   returnValue: getAstItem(tokens[tempX + 1], tokens);
+      //   case TokenType.Var:
+      //     console.log('var', tokens[current]);
+      //     current++;
+      //     return {
+      //       type: ItemType.Number,
+      //       value: token.value
+      //     };
+      //   case TokenType.Arrow:
+      //     // console.log('arr');
+      //     current++;
+      //     return {
+      //       type: ItemType.ReturnVal,
+      //       value: token.value
+      //     };
+      //   case TokenType.Operator:
+      //     console.log('oper', token.type);
+      //     console.log(TokenType.Operator);
+
+      //     const tempp = current;
+      //     console.log('oper', current);
+      //     console.log('oper', tokens[tempp + 1]);
+      //     // console.log('oper', current);
+      //     current++;
+      //     return {
+      //       type: ItemType.Operation,
+      //       name: token.value,
+      //       operands: [
+      //         getAstItem(tokens[tempp + 1], tokens),
+      //         getAstItem(tokens[tempp + 2], tokens)
+      //       ]
+      //     };
       default:
         current++;
         return {
-          type: ItemType.Number,
+          type: 'undefined',
           value: token.value
         };
     }
@@ -178,13 +281,13 @@ function parse(tokens) {
   //   (add 2 2)
   //   (subtract 4 2)
   //
-  while (current < tokens.length) {
+  let ast = {
+    type: ItemType.Module,
+    body: []
+  };
+  while (current < tokens.length - 1) {
     ast.body.push(walk());
   }
-  //   while (current < 1) {
-  //     ast.body.push(walk());
-  //   }
-
   // At the end of our parser we'll return the AST.
   return ast;
 }
@@ -214,43 +317,6 @@ var tokens = [
 ];
 
 // const input = 'add : a b => a + b';
-
-// var ast = {
-//   type: 'Program',
-//   body: [
-//     {
-//       type: 'FunctionDeclaration',
-//       name: 'add',
-//       params: [
-//         {
-//           type: 'Numberi32',
-//           value: 'a'
-//         },
-//         {
-//           type: 'Numberi32',
-//           value: 'b'
-//         }
-//       ],
-//       returnValue: {
-//         type: 'Expression',
-//         value: {
-//           type: 'Operation',
-//           name: '+',
-//           operands: [
-//             {
-//               type: 'Numberi32',
-//               value: 'a'
-//             },
-//             {
-//               type: 'Numberi32',
-//               value: 'b'
-//             }
-//           ]
-//         }
-//       }
-//     }
-//   ]
-// };
 
 // var ast = {
 //   type: 'Program',

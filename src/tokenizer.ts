@@ -1,15 +1,14 @@
 import { Token } from './common/types';
 import { TokenType } from './common/enums';
-
-// vars must be lowercase letters of length 1
-const varRegExp = /^([a-z]){1,1}$/;
-// names must be lowercase letters of length at least 2
-const nameRegExp = /^([a-z]){3,}$/;
-// only these operations are supported
-const OPS = Object.freeze(['+', '-', '/', '*']);
-const ARROW = '=>';
-const COLUMN = ':';
-const FUNC = 'fn';
+import {
+  FUNC,
+  varRegExp,
+  nameRegExp,
+  ARROW,
+  COLUMN,
+  SEMICOLUMN,
+  OPS
+} from './common/syntax';
 
 function getTokenType(str: string): TokenType {
   if (str === FUNC) {
@@ -22,6 +21,8 @@ function getTokenType(str: string): TokenType {
     return TokenType.Arrow;
   } else if (str === COLUMN) {
     return TokenType.Column;
+  } else if (str === SEMICOLUMN) {
+    return TokenType.Semicolumn;
   } else if (OPS.includes(str)) {
     return TokenType.Operator;
   } else {

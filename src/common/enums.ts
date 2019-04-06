@@ -4,11 +4,14 @@ export enum TokenType {
   FnKeyword,
   Name,
   Operator,
+  Semicolumn,
   Var
 }
 
 export enum ItemType {
+  Expression,
+  FnDeclaration,
+  Module,
   Number,
-  Operation,
-  FnDeclaration
+  Operation
 }

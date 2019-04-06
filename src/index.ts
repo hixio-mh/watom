@@ -5,5 +5,5 @@ const input = 'fn add : a b => + a b';
 const tokens = tokenize(input);
 const ast = parse(tokens);
 
-console.log(tokens);
+console.table(tokens);
 console.log(ast);
