@@ -6,11 +6,12 @@ import {
   nameRegExp,
   ARROW,
   COLUMN,
-  OPS
+  OPS,
+  SEMICOLUMN
 } from './common/syntax';
 
 // var ast = {
-//   type: 'Program',
+//   type: 'Module',
 //   body: [
 //     {
 //       type: 'FunctionDeclaration',
@@ -29,7 +30,7 @@ import {
 //         type: 'Expression',
 //         value: {
 //           type: 'Operation',
-//           name: '+',
+//           operator: '+',
 //           operands: [
 //             {
 //               type: 'Numberi32',
@@ -46,20 +47,43 @@ import {
 //   ]
 // };
 
-function returnValueBuilder(tokens, startIndex) {
-  // we know that the return value spans until the end
-  const endIndex = tokens.length - 1;
+function opBuilder(tokens, startIndex) {
+  // everything until the end of tokens is part of the op
+  let endIndex = tokens.length - 1;
+  const operandsTokens = tokens.slice(startIndex + 1, tokens.length);
   return {
     item: {
+      type: ItemType.Operation,
+      operator: tokens[startIndex].value,
+      // +1 in order to ignore `=>`
+      operands: operandsTokens.map(o => ({
+        type: 'Numberi32',
+        value: o.value
+      }))
+    },
+    increment: endIndex - startIndex
+  };
+}
+
+function returnValueBuilder(tokens, startIndex) {
+  let endIndex = startIndex;
+  // everything between `=>` and `;` is part of the return value
+  while (tokens[endIndex] && tokens[endIndex].value !== SEMICOLUMN) {
+    endIndex++;
+  }
+  return {
+    item: {
+      // to do why
       type: ItemType.Expression,
-      value: 'yup'
+      // +1 in order to ignore `=>`
+      value: opBuilder(tokens, startIndex + 1).item
     },
     increment: endIndex - startIndex
   };
 }
 
 function fnDeclarationBuilder(tokens, startIndex) {
-  // we know that a fn dec is like: `fn fnName :`
+  // we know that a function declaration looks like: `fn fnName :`
   const endIndex = startIndex + 2;
   return {
     item: {
