@@ -66,7 +66,7 @@ function returnValueBuilder(tokens: Array<Token>, startIndex: number) {
   return {
     item: {
       type: ItemType.Expression,
-      // +1 in order to ignore `=>`
+      // +1 to ignore `=>`
       value: opBuilder(tokens, startIndex + 1).item
     },
     increment: endIndex - startIndex
@@ -107,15 +107,17 @@ function parse(tokens: Array<Token>) {
     switch (token.type) {
       case TokenType.FnKeyword:
         let tempX = current;
-        let tempX2 = tempX + fnDeclarationBuilder(tokens, tempX).increment;
-        let tempX3 = tempX2 + paramsBuilder(tokens, tempX2).increment;
-        let tempX4 = tempX3 + returnValueBuilder(tokens, tempX3).increment;
+        const fnDeclaration = fnDeclarationBuilder(tokens, tempX);
+        let tempX2 = tempX + fnDeclaration.increment;
+        const params = paramsBuilder(tokens, tempX2);
+        let tempX3 = tempX2 + params.increment;
+        const returnValue = returnValueBuilder(tokens, tempX3);
+        let tempX4 = tempX3 + returnValue.increment;
         current += tempX4;
-        console.log(current);
         return {
-          ...fnDeclarationBuilder(tokens, tempX).item,
-          params: paramsBuilder(tokens, tempX2).item,
-          returnValue: returnValueBuilder(tokens, tempX3).item
+          ...fnDeclaration.item,
+          params: params.item,
+          returnValue: returnValue.item
         };
       default:
         current++;
@@ -132,7 +134,6 @@ function parse(tokens: Array<Token>) {
   while (current < tokens.length) {
     ast.body.push(getAstItem(tokens[current], tokens));
   }
-  // At the end of our parser we'll return the AST.
   return ast;
 }
 
