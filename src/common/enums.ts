@@ -11,7 +11,7 @@ export enum TokenType {
 export enum ItemType {
   Expression,
   FnDeclaration,
-  Module,
+  Program,
   Number,
   Operation
 }

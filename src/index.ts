@@ -1,12 +1,13 @@
 import tokenize from './tokenizer';
 import parse from './parser';
 
-const input = 'fn add : a b => + a b';
+const input = 'fn add:i32 : a b => + a b';
 const tokens = tokenize(input);
 const ast = parse(tokens);
 
 console.table(tokens);
 console.log(JSON.stringify(ast));
+console.log(ast);
 
 const ast2 = {
   type: 2,

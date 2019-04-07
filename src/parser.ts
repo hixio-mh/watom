@@ -3,7 +3,7 @@ import { Token, AstItemExtended } from './common/types';
 import { SEMICOLUMN } from './common/syntax';
 
 // var ast = {
-//   type: 'Module',
+//   type: 'Program',
 //   body: [
 //     {
 //       type: 'FunctionDeclaration',
@@ -40,11 +40,22 @@ import { SEMICOLUMN } from './common/syntax';
 // };
 
 // (module
-//     (func (param $p i32) (param $q i32)
-//       get_local $p
-//       get_local $q
+//     (func (param $l i32) (param $r i32) (result i32)
+//       get_local $l
+//       get_local $r
 //       i32.add)
 //     ))
+
+// (module
+//   (func $add (param $l i32) (param $r i32) (result i32)
+//     get_local $l
+//     get_local $r
+//     i32.add)
+//   (export "add" (func $add))
+// )
+
+// $add
+// (export "add" (func $add))
 
 function opBuilder(tokens: Array<Token>, startIndex: number): AstItemExtended {
   // everything until the end of tokens is part of the op
@@ -144,7 +155,7 @@ function parse(tokens: Array<Token>) {
     }
   }
   const ast = {
-    type: ItemType.Module,
+    type: ItemType.Program,
     body: []
   };
   while (current < tokens.length) {
