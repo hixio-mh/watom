@@ -1,5 +1,5 @@
 import { ItemType, TokenType } from './common/enums';
-import { Token } from './common/types';
+import { Token, AstItemExtended } from './common/types';
 import { SEMICOLUMN } from './common/syntax';
 
 // var ast = {
@@ -39,7 +39,14 @@ import { SEMICOLUMN } from './common/syntax';
 //   ]
 // };
 
-function opBuilder(tokens: Array<Token>, startIndex: number) {
+// (module
+//     (func (param $p i32) (param $q i32)
+//       get_local $p
+//       get_local $q
+//       i32.add)
+//     ))
+
+function opBuilder(tokens: Array<Token>, startIndex: number): AstItemExtended {
   // everything until the end of tokens is part of the op
   let endIndex = tokens.length - 1;
   const operandsTokens = tokens.slice(startIndex + 1, tokens.length);
@@ -49,7 +56,7 @@ function opBuilder(tokens: Array<Token>, startIndex: number) {
       operator: tokens[startIndex].value,
       // +1 in order to ignore `=>`
       operands: operandsTokens.map(o => ({
-        type: ItemType.N,
+        type: ItemType.Number,
         value: o.value
       }))
     },
@@ -57,7 +64,10 @@ function opBuilder(tokens: Array<Token>, startIndex: number) {
   };
 }
 
-function returnValueBuilder(tokens: Array<Token>, startIndex: number) {
+function returnValueBuilder(
+  tokens: Array<Token>,
+  startIndex: number
+): AstItemExtended {
   let endIndex = startIndex;
   // everything between `=>` and `;` is part of the return value
   while (tokens[endIndex] && tokens[endIndex].value !== SEMICOLUMN) {
@@ -73,7 +83,10 @@ function returnValueBuilder(tokens: Array<Token>, startIndex: number) {
   };
 }
 
-function fnDeclarationBuilder(tokens: Array<Token>, startIndex: number) {
+function fnDeclarationBuilder(
+  tokens: Array<Token>,
+  startIndex: number
+): AstItemExtended {
   // a function declaration looks like: `fn fnName :`
   const endIndex = startIndex + 2;
   return {
@@ -85,9 +98,12 @@ function fnDeclarationBuilder(tokens: Array<Token>, startIndex: number) {
   };
 }
 
-function paramsBuilder(tokens: Array<Token>, startIndex: number) {
+function paramsBuilder(
+  tokens: Array<Token>,
+  startIndex: number
+): AstItemExtended {
   let endIndex = startIndex;
-  // everything before "=>" is a parameter
+  // everything before `=>` is a parameter
   while (tokens[endIndex].value !== '=>') {
     endIndex++;
   }
@@ -138,10 +154,3 @@ function parse(tokens: Array<Token>) {
 }
 
 export default parse;
-
-// (module
-//     (func (param $p i32)
-//       get_local $p
-//       get_local $p
-//       i32.add)
-//     )

@@ -5,9 +5,45 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Watom</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./src/assets/favicon-16x16.png"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="./src/styles/index.scss"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700"
+      rel="stylesheet"
+    />
     <script src="./src/index.ts"></script>
   </head>
-  <body></body>
+  <body>
+    <div class=header">Watom</div>
+    <div class="panels">
+      <div>
+        <h2>Input</h2>
+        <div class="panel-body">
+          <textarea>fn add : a b => + a b</textarea>
+        </div>
+      </div>
+      <div>
+        <h2>Tokenized</h2>
+        <div class="panel-body"></div>
+      </div>
+      <div>
+        <h2>Parsed</h2>
+        <div class="panel-body"></div>
+      </div>
+      <div>
+        ...
+        <div class="panel-body"></div>
+      </div>
+    </div>
+  </body>
 </html>

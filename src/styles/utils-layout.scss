@@ -1,0 +1,7 @@
+@mixin flex-h {
+  display: flex;
+}
+
+@mixin flex($grow) {
+  flex: $grow;
+}
