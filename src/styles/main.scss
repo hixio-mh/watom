@@ -12,26 +12,18 @@ body {
   box-sizing: border-box;
 }
 
-textarea {
-  resize: none;
-  width: calc(100% - 1rem);
-  color: inherit;
-  font-family: inherit;
-  border: none;
-  font-size: 1rem;
-  padding: 0.5rem;
-  background: var(--background-medium);
-  transition: background-color $transition;
-  &:focus {
-    background: var(--background-light);
-    outline: none;
+.header {
+  height: var(--header-height);
+  @include flex-h-center;
+  .logo {
+    margin-right: 0.4rem;
+    @include flex-h-center;
   }
 }
 
-// utils
 .panels {
   @include flex-h;
-  height: 100%;
+  height: calc(100% - var(--header-height));
   > div {
     @include flex(1);
     padding: 0 0.4rem;
@@ -44,5 +36,20 @@ textarea {
   }
   div:first-child {
     border-left: var(--border);
+  }
+  textarea {
+    resize: none;
+    width: calc(100% - 1rem);
+    color: inherit;
+    font-family: inherit;
+    border: none;
+    font-size: 1rem;
+    padding: 0.5rem;
+    background: var(--background-medium);
+    transition: background-color $transition;
+    &:focus {
+      background: var(--background-light);
+      outline: none;
+    }
   }
 }

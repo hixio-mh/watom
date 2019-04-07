@@ -2,6 +2,11 @@
   display: flex;
 }
 
+@mixin flex-h-center {
+  @include flex-h;
+  align-items: center;
+}
+
 @mixin flex($grow) {
   flex: $grow;
 }

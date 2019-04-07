@@ -1,0 +1,90 @@
+body {
+  --background-default: #1b1b1b;
+  --background-medium: #3b3b3b;
+  --background-light: #5a5a5a;
+  --font-color-default: rgba(255, 255, 255, 0.9);
+  --border: dashed 1px white;
+  --header-height: 3rem;
+}
+
+body {
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+}
+
+h2 {
+  margin: 0;
+  padding: 0.5rem 0;
+  border-bottom: var(--border);
+  border-top: var(--border);
+}
+
+body {
+  --background-default: #1b1b1b;
+  --background-medium: #3b3b3b;
+  --background-light: #5a5a5a;
+  --font-color-default: rgba(255, 255, 255, 0.9);
+  --border: dashed 1px white;
+  --header-height: 3rem;
+}
+
+body {
+  font-family: "Roboto Mono", monospace;
+  font-size: 16px;
+}
+
+h2 {
+  margin: 0;
+  padding: 0.5rem 0;
+  border-bottom: var(--border);
+  border-top: var(--border);
+}
+
+body {
+  background: var(--background-default);
+  color: var(--font-color-default);
+  width: 100vw;
+  height: 100vh;
+  padding: 0.8rem;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  height: var(--header-height);
+  display: flex;
+  justify-content: center;
+}
+
+.panels {
+  display: flex;
+  height: calc(100% - var(--header-height));
+}
+.panels > div {
+  flex: 1;
+  padding: 0 0.4rem;
+  border-right: var(--border);
+  border-bottom: var(--border);
+}
+.panels > div .panel-body {
+  margin: 1rem;
+  border: none;
+}
+.panels div:first-child {
+  border-left: var(--border);
+}
+.panels textarea {
+  resize: none;
+  width: calc(100% - 1rem);
+  color: inherit;
+  font-family: inherit;
+  border: none;
+  font-size: 1rem;
+  padding: 0.5rem;
+  background: var(--background-medium);
+  transition: background-color 0.2s ease-out;
+}
+.panels textarea:focus {
+  background: var(--background-light);
+  outline: none;
+}
