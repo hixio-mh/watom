@@ -14,10 +14,10 @@ body {
 
 .header {
   height: var(--header-height);
-  @include flex-h-center;
+  @include flex-h-start;
   .logo {
     margin-right: 0.4rem;
-    @include flex-h-center;
+    @include flex-h-start;
   }
 }
 

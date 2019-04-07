@@ -2,9 +2,9 @@
   display: flex;
 }
 
-@mixin flex-h-center {
+@mixin flex-h-start {
   @include flex-h;
-  align-items: center;
+  align-items: flex-start;
 }
 
 @mixin flex($grow) {
